@@ -21,21 +21,21 @@
 
 灵思睿著是一套面向教材、讲义和课程内容生产的 AI Web 应用。用户上传 PDF、DOCX、PPTX、Markdown 或 TXT 素材后，系统会解析并建立检索索引，再基于素材生成目录、大纲和正文。
 
-它不只负责“写一段文字”，还把长内容生产拆成可恢复的工作流：保存输入快照、记录检索证据、校验结构、审查引用、控制修订次数，并在关键阶段等待人工确认。
+它不只负责“写一段文字”，还把长内容生产拆成可恢复的工作流：保存输入快照、记录检索证据、校验结构、审查引用并控制修订次数。确定性写作与人工审批属于受开关保护的渐进能力，默认不会直接替换稳定链路。
 
 ## 核心能力
 
-| 能力 | 说明 |
-| --- | --- |
-| 素材中心 | 批量上传并异步解析 PDF、DOCX、PPTX、MD、TXT |
-| 教材工作台 | 在目录、大纲、正文、引用与对话之间连续创作 |
-| AI 生成 | 生成目录、大纲、正文，支持改写、扩写与精简 |
-| Hybrid RAG | MySQL 稀疏检索与 Qdrant 向量检索融合，支持重排与邻块扩展 |
-| 可信引用 | 记录 claim、证据片段、素材来源、检索排名和支持状态 |
-| 持久化工作流 | MySQL 保存任务、检查点与事件；Bull Worker 执行耗时任务 |
-| 人工审批 | 目录和大纲批准后生效，正文以草稿方式保存并等待接受 |
-| 体例模板 | 管理教材写作风格、章节规范与内容约束 |
-| 多格式导出 | 异步生成 DOCX 或 Markdown |
+| 能力 | 状态 | 说明 |
+| --- | --- | --- |
+| 素材中心 | 稳定 | 批量上传并异步解析 PDF、DOCX、PPTX、MD、TXT |
+| 教材工作台 | 稳定 | 在目录、大纲、正文、引用与对话之间连续创作 |
+| AI 生成 | 稳定 | 生成目录、大纲、正文，支持改写、扩写与精简 |
+| 持久化工作流 | 稳定 | MySQL 保存任务、检查点与事件；Bull Worker 执行耗时任务 |
+| Hybrid RAG | 默认 Shadow | MySQL 稀疏检索与 Qdrant 向量检索融合；通过生产评测门禁后才能切主链路 |
+| 可信引用 | 渐进启用 | 记录 claim、证据片段、素材来源、检索排名和支持状态 |
+| 人工审批 | 默认关闭 | 确定性工作流启用后支持目录、大纲和正文审批 |
+| 体例模板 | 稳定 | 管理教材写作风格、章节规范与内容约束 |
+| 多格式导出 | 稳定 | 异步生成 DOCX 或 Markdown |
 
 ## 工作原理
 
@@ -54,6 +54,8 @@ flowchart LR
 ```
 
 生成任务由 API 创建，Worker 在后台执行。前端通过标准任务接口与 SSE 事件流展示进度；刷新页面后可按任务 ID 恢复，取消状态和错误节点也会持久化。
+
+默认 `RETRIEVAL_MODE=shadow`、`AUTHORING_COMMIT_MODE=off`、`ATOMIC_GROUNDING_MODE=off`。上图表达目标编排结构，不代表所有渐进能力在默认配置下都已切换为主路径。
 
 ## 技术架构
 
@@ -100,9 +102,9 @@ flowchart LR
 git clone https://github.com/Siriuskangkang/write-agent.git
 cd write-agent
 
-npm install
-npm --prefix backend install
-npm --prefix frontend install
+npm ci
+npm --prefix backend ci
+npm --prefix frontend ci
 ```
 
 ### 2. 准备环境变量
@@ -122,6 +124,14 @@ DEEPSEEK_API_KEY=你的_API_Key
 ```
 
 示例配置中的 MySQL 和 Redis 凭据已与 Docker Compose 默认值对齐。不要提交真实的 `.env` 或 API Key。
+
+如需建立 Qdrant dense 索引，还要设置：
+
+```dotenv
+OPENAI_API_KEY=你的_Embedding_API_Key
+```
+
+未配置 Embedding Key 时，dense indexing 会停用；默认 Shadow 模式仍可返回 legacy 检索结果。
 
 ### 3. 启动基础设施
 
@@ -144,6 +154,15 @@ npm --prefix frontend run build
 pm2 start ecosystem.config.cjs
 pm2 status
 ```
+
+验证依赖和 Worker：
+
+```bash
+curl -fsS http://localhost:3002/api/health/live
+curl -fsS http://localhost:3002/api/health/ready
+```
+
+`ready` 只有在 MySQL、Redis、Worker 心跳、Qdrant 和所选 LLM 配置全部可用时才返回成功。
 
 启动后访问：
 
@@ -186,8 +205,8 @@ write-agent/
 │   ├── src/features/        # 领域功能模块
 │   ├── src/services/        # API 客户端
 │   └── tests/e2e/           # Playwright 测试
-├── docs/                    # 产品、架构、优化与运维文档
-├── docker-compose.yml       # MySQL、Redis、Qdrant 与完整应用
+├── docs/                    # 当前产品、架构、开发、部署与运维文档
+├── docker-compose.yml       # 本地 MySQL、Redis、Qdrant 基础设施
 └── ecosystem.config.cjs     # PM2 进程配置
 ```
 
@@ -229,15 +248,17 @@ npm --prefix backend run rag:evaluate
 
 ## 文档
 
-- [完整优化报告](./docs/optimization-report-2026-07-27.md)
-- [运维与健康检查](./docs/operations.md)
-- [前端开发方案](./docs/开发方案/教材编写Agent_前端开发方案.md)
-- [后端开发方案](./docs/开发方案/教材编写Agent_后端开发方案.md)
-- [接口与数据库契约](./docs/开发方案/教材编写Agent_接口与数据库契约.md)
+- [文档索引](./docs/README.md)
+- [产品范围](./docs/product-overview.md)
+- [系统架构](./docs/architecture.md)
+- [开发指南](./docs/development.md)
+- [部署指南](./docs/deployment.md)
+- [运维手册](./docs/operations.md)
+- [贡献指南](./CONTRIBUTING.md)
 
 ## 项目状态
 
-项目目前处于持续开发阶段。核心创作链路可以本地运行，Hybrid RAG、确定性写作编排和可信引用机制采用安全开关逐步启用，适合继续进行真实语料评测、模型调优和前端体验完善。
+项目目前处于持续开发阶段。核心创作链路可以本地运行；legacy compatibility path 仍被保留，Hybrid RAG、确定性写作编排和可信引用机制通过安全开关逐步切换。
 
 欢迎提交 Issue 或 Pull Request。提交代码前，请至少完成相关模块测试、类型检查与构建。
 

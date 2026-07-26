@@ -1,26 +1,25 @@
 const path = require("node:path");
 
-const isProd = process.env.NODE_ENV === "production";
 const rootDir = __dirname;
 const brokerEnabled = process.env.STORAGE_AUTHORITY_MODE === "broker";
 
 const apps = [
   {
     name: "write-agent-api",
-    cwd: isProd ? "/home/TextWeaver/app/backend" : "./backend",
+    cwd: path.join(rootDir, "backend"),
     script: "dist/src/main.js",
     args: "",
     interpreter: "node",
-    env: { NODE_ENV: isProd ? "production" : "development" },
+    env: { NODE_ENV: process.env.NODE_ENV || "development" },
   },
   {
     name: "write-agent-worker",
-    cwd: isProd ? "/home/TextWeaver/app/backend" : "./backend",
+    cwd: path.join(rootDir, "backend"),
     script: "dist/src/worker-main.js",
     args: "",
     interpreter: "node",
     env: {
-      NODE_ENV: isProd ? "production" : "development",
+      NODE_ENV: process.env.NODE_ENV || "development",
       WORKER_MODE: "true",
       ATOMIC_GROUNDING_METRICS_HOST: "127.0.0.1",
       ATOMIC_GROUNDING_METRICS_PORT: "9465",
@@ -28,7 +27,7 @@ const apps = [
   },
   {
     name: "write-agent-web",
-    cwd: isProd ? "/home/TextWeaver/app/frontend" : "./frontend",
+    cwd: path.join(rootDir, "frontend"),
     script: "node_modules/next/dist/bin/next",
     args: "start -p 8002",
     interpreter: "node",

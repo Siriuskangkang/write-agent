@@ -1,16 +1,15 @@
-# Atomic grounding shadow rollout
+# Atomic Grounding Shadow 发布
 
-Task 10B supports only `off` and `shadow_no_persist`. The default is `off`.
-Shadow mode validates and renders an atomic candidate, but it never persists
-the candidate to writing, version, claim, citation, or workflow-domain-commit
-tables. Positive atomic persistence remains outside this rollout.
+当前实现只支持 `off` 和 `shadow_no_persist`，默认值是 `off`。
+Shadow 模式会验证并渲染 atomic candidate，但不会将候选持久化到
+writing、version、claim、citation 或 workflow-domain-commit 表。
+正式 Atomic 内容持久化不属于当前发布范围。
 
 ## Metrics scrape target
 
 Atomic generation runs in the separate worker process, so its in-memory
 exporter is exposed by that process rather than by the API process. Scrape
-`GET http://127.0.0.1:9465/metrics` for PM2 deployments. Docker Compose maps
-the same loopback-only host port to the worker listener. Configure
+`GET http://127.0.0.1:9465/metrics` for PM2 deployments. Configure
 `ATOMIC_GROUNDING_METRICS_HOST` and `ATOMIC_GROUNDING_METRICS_PORT` only when
 the scraper topology requires a different worker-local bind address. The
 listener serves only `/metrics`; application routes are not mounted.

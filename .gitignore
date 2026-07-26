@@ -34,16 +34,27 @@ frontend/tsconfig.tsbuildinfo
 frontend/playwright-report/
 frontend/test-results/
 
+# 本地 Agent / IDE 状态
+**/.omc/
+.superpowers/
+.claude/
+.codex/
+.agents/
+CLAUDE.md
+
 # 本地运行产物与恢复副本
 backend/exports/
 backend/evaluation/rag/artifacts/*
 !backend/evaluation/rag/artifacts/.gitkeep
+coverage/
+backend/coverage/
+frontend/coverage/
 backup/
 *.backup
 
-# 截图
-*.png
-!docs/images/*.png
+# 临时截图；正式图片可放在源码或 docs/images/
+screenshots/
+screenshot-*.png
 
 # 临时脚本（可能含敏感信息）
 backend/fix-*.js

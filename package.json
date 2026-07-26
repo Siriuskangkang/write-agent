@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "docs:check": "node scripts/check-docs.mjs",
     "storage:preflight": "bash scripts/storage-authority-preflight.sh",
     "storage:activate": "bash scripts/storage-authority-activate.sh",
     "storage:negative-probe": "bash scripts/storage-authority-negative-probe.sh",
