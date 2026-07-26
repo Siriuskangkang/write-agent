@@ -1,0 +1,90 @@
+import { toPublicCitation } from './citation-response.dto.js';
+
+describe('toPublicCitation', () => {
+  it('whitelists verifiable citation fields and omits internal snapshots', () => {
+    const result = toPublicCitation({
+      id: 'citation-1',
+      project_id: 'project-1',
+      result_id: 'result-1',
+      paragraph_key: 'claim:abc',
+      chunk_id: 'chunk-1',
+      file_id: 'file-1',
+      use_type: 'synthesize',
+      evidence_text: '装机容量为 300 MW',
+      page_number: 3,
+      section_title: '项目概况',
+      confidence_score: 0.94,
+      claim_id: 'claim-1',
+      evidence_id: 'evidence:chunk-1',
+      document_id: 'document-1',
+      retrieval_run_id: 'run-1',
+      support_status: 'SUPPORTED',
+      support_score: 0.94,
+      verification_method: 'deterministic_exact',
+      evidence_char_start: 103,
+      evidence_char_end: 115,
+      chunk_char_start: 3,
+      chunk_char_end: 15,
+      candidate_rank: 1,
+      sparse_rank: 2,
+      dense_rank: 1,
+      fusion_rank: 1,
+      rerank_rank: 1,
+      sparse_score: 4.2,
+      dense_score: 0.8,
+      fusion_score: 0.06,
+      rerank_score: 0.94,
+      ingestion_key: 'secret-ingestion-key',
+      index_snapshot: { namespace: 'internal-qdrant-namespace' },
+      created_at: new Date('2026-07-26T00:00:00Z'),
+      file_name: '新能源教材.pdf',
+      file_type: 'pdf',
+      claim_text: '本项目装机容量为 300 MW',
+      output_char_start: 7,
+      output_char_end: 22,
+      heading_path: ['第一章', '项目概况'],
+      page_start: 3,
+      page_end: 3,
+      reference_text: '新能源教材[M]. 第一章 > 项目概况，第3页.',
+    });
+
+    expect(result).toEqual({
+      id: 'citation-1',
+      claim_id: 'claim-1',
+      claim_text: '本项目装机容量为 300 MW',
+      output_char_start: 7,
+      output_char_end: 22,
+      evidence_id: 'evidence:chunk-1',
+      chunk_id: 'chunk-1',
+      file_id: 'file-1',
+      file_name: '新能源教材.pdf',
+      file_type: 'pdf',
+      evidence_text: '装机容量为 300 MW',
+      support_status: 'SUPPORTED',
+      support_score: 0.94,
+      verification_method: 'deterministic_exact',
+      evidence_char_start: 103,
+      evidence_char_end: 115,
+      chunk_char_start: 3,
+      chunk_char_end: 15,
+      candidate_rank: 1,
+      scores: {
+        sparse: 4.2,
+        dense: 0.8,
+        fusion: 0.06,
+        rerank: 0.94,
+      },
+      ranks: { sparse: 2, dense: 1, fusion: 1, rerank: 1 },
+      page_start: 3,
+      page_end: 3,
+      heading_path: ['第一章', '项目概况'],
+      reference_text: '新能源教材[M]. 第一章 > 项目概况，第3页.',
+      created_at: new Date('2026-07-26T00:00:00Z'),
+    });
+    expect(result).not.toHaveProperty('project_id');
+    expect(result).not.toHaveProperty('result_id');
+    expect(result).not.toHaveProperty('ingestion_key');
+    expect(result).not.toHaveProperty('index_snapshot');
+    expect(result).not.toHaveProperty('retrieval_run_id');
+  });
+});

@@ -1,0 +1,12 @@
+.previewTree :global(.ant-tree-title) {
+  color: #1e293b !important;
+}
+
+.previewTree :global(.ant-tree-node-content-wrapper) {
+  color: #1e293b !important;
+}
+
+.previewTree :global(.ant-tree-switcher),
+.previewTree :global(.ant-tree-iconEle) {
+  color: #64748b !important;
+}

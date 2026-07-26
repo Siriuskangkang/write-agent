@@ -1,0 +1,52 @@
+# 环境变量（敏感信息，不提交）
+.env
+.env.local
+backend/.env
+frontend/.env.local
+
+# 依赖
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# 构建产物
+backend/dist/
+frontend/.next/
+frontend/.next.bak*/
+frontend/out/
+
+# 上传文件
+uploads/
+backend/uploads
+文献/
+
+# 部署产物
+deploy-*.tar.gz
+deploy-info.json
+.build-version
+
+# TypeScript 构建缓存
+frontend/tsconfig.tsbuildinfo
+
+# Playwright 测试产物
+.playwright-cli/
+.playwright-mcp/
+frontend/playwright-report/
+frontend/test-results/
+
+# 本地运行产物与恢复副本
+backend/exports/
+backend/evaluation/rag/artifacts/*
+!backend/evaluation/rag/artifacts/.gitkeep
+backup/
+*.backup
+
+# 截图
+*.png
+!docs/images/*.png
+
+# 临时脚本（可能含敏感信息）
+backend/fix-*.js
+
+# 系统文件
+.DS_Store

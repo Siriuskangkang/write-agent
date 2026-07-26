@@ -1,0 +1,15 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "^.*file/parsers/(docx|pdf|pptx|txt)\\.parser\\.js$": "<rootDir>/mocks/file-parser.ts",
+    "^nanoid$": "<rootDir>/mocks/nanoid.ts",
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+    "^uuid$": "<rootDir>/mocks/uuid.ts"
+  }
+}

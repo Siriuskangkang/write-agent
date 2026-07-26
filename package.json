@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "storage:preflight": "bash scripts/storage-authority-preflight.sh",
+    "storage:activate": "bash scripts/storage-authority-activate.sh",
+    "storage:negative-probe": "bash scripts/storage-authority-negative-probe.sh",
+    "test:storage-ops": "node --test tests/storage-authority-ops.test.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}

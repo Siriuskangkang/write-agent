@@ -1,0 +1,105 @@
+{
+  "dataset": "chinese-textbook-shadow-v2",
+  "k": 8,
+  "corpus": [
+    {
+      "chunk_id": "cnc-01",
+      "file_id": "cnc",
+      "heading_path": ["数控技术", "进给伺服"],
+      "content": "闭环进给伺服系统把位置检测装置测得的实际位移反馈到控制器，与指令位置比较形成误差并进行校正。"
+    },
+    {
+      "chunk_id": "cnc-02",
+      "file_id": "cnc",
+      "heading_path": ["数控技术", "位置检测"],
+      "content": "位置检测元件的精度、分辨率和安装位置直接影响闭环控制的定位精度与稳定性。"
+    },
+    {
+      "chunk_id": "robot-01",
+      "file_id": "robot",
+      "heading_path": ["工业机器人", "示教安全"],
+      "content": "机器人示教前应确认安全围栏、急停按钮和限位装置有效，并清理作业区域内无关人员。"
+    },
+    {
+      "chunk_id": "robot-02",
+      "file_id": "robot",
+      "heading_path": ["工业机器人", "示教步骤"],
+      "content": "示教时选择低速手动模式，操作者持续握持使能开关，逐点确认轨迹且不得站在机械臂与固定物之间。"
+    },
+    {
+      "chunk_id": "robot-03",
+      "file_id": "robot",
+      "heading_path": ["工业机器人", "风险处置"],
+      "content": "发现碰撞、失控或异常声响时立即按下急停，切断动力并按锁定挂牌程序排除故障。"
+    },
+    {
+      "chunk_id": "plc-01",
+      "file_id": "plc",
+      "heading_path": ["PLC", "扫描周期"],
+      "content": "PLC循环扫描依次完成输入采样、用户程序执行和输出刷新三个主要阶段。"
+    },
+    {
+      "chunk_id": "plc-02",
+      "file_id": "plc",
+      "heading_path": ["PLC", "输入输出映像"],
+      "content": "输入采样阶段把现场输入写入输入映像区，程序执行期间通常读取该快照，输出刷新时再统一驱动端子。"
+    },
+    {
+      "chunk_id": "measure-01",
+      "file_id": "measurement",
+      "heading_path": ["机械测量", "误差分类"],
+      "content": "系统误差具有可预测的规律，可通过校准修正；随机误差方向和大小不确定，可用多次测量降低影响。"
+    },
+    {
+      "chunk_id": "measure-02",
+      "file_id": "measurement",
+      "heading_path": ["机械测量", "粗大误差"],
+      "content": "粗大误差多由读数错误、仪器故障或操作失误造成，识别后应剔除并重新测量。"
+    },
+    {
+      "chunk_id": "hydraulic-01",
+      "file_id": "hydraulic",
+      "heading_path": ["液压传动", "溢流阀"],
+      "content": "溢流阀在系统压力超过调定值时开启回油，从而实现定压和过载保护。"
+    },
+    {
+      "chunk_id": "hydraulic-02",
+      "file_id": "hydraulic",
+      "heading_path": ["液压传动", "故障诊断"],
+      "content": "溢流阀常见故障包括阀芯卡滞、弹簧失效和污染堵塞，会导致压力波动、压力不足或异常发热。"
+    },
+    {
+      "chunk_id": "noise-01",
+      "file_id": "catering",
+      "heading_path": ["餐饮服务", "卫生"],
+      "content": "餐饮服务人员应按规定进行餐具消毒和食品留样。"
+    }
+  ],
+  "judgments": [
+    {
+      "id": "cnc-servo-loop",
+      "query": "数控机床进给伺服系统中闭环控制与位置检测的关系",
+      "relevant_chunk_ids": ["cnc-01", "cnc-02"]
+    },
+    {
+      "id": "robot-safety",
+      "query": "工业机器人示教作业的安全操作步骤与风险点",
+      "relevant_chunk_ids": ["robot-01", "robot-02", "robot-03"]
+    },
+    {
+      "id": "plc-scan",
+      "query": "PLC循环扫描过程输入采样程序执行输出刷新",
+      "relevant_chunk_ids": ["plc-01", "plc-02"]
+    },
+    {
+      "id": "measurement-error",
+      "query": "机械测量中系统误差随机误差和粗大误差的区别",
+      "relevant_chunk_ids": ["measure-01", "measure-02"]
+    },
+    {
+      "id": "hydraulic-relief",
+      "query": "液压系统溢流阀的定压保护作用和常见故障",
+      "relevant_chunk_ids": ["hydraulic-01", "hydraulic-02"]
+    }
+  ]
+}

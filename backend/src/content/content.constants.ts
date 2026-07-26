@@ -1,0 +1,1 @@
+export const SSE_REDIS_CLIENT = 'SSE_REDIS_CLIENT';
